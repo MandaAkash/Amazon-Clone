@@ -3,8 +3,17 @@ import styled from 'styled-components'
 import { useStateValue } from '../StateProvider';
 import {useNavigate} from "react-router-dom"
 function Navbar() {
-  const [{basket}]=useStateValue();
+  const [{basket,user},dispatch]=useStateValue();
   const navigate=useNavigate();
+  const signOut = () => {
+    dispatch({
+      type: "SET_USER",
+      user: null,
+    });
+
+    localStorage.removeItem("user");
+    navigate("/");
+  };
   return (
     <Container>
         <Inner>
@@ -13,16 +22,16 @@ function Navbar() {
            </Logo>
            <SearchBar>
             <input type="text" placeholder="Search..."/>
-            <SearchIcon>
+            <SearchIcon onClick={()=>navigate('/addProduct')}>
                 <img src='./images/searchIcon.png' alt=''/>
-             </SearchIcon>
+             </SearchIcon >
            </SearchBar>
            <RightContainer>
-            <NavButton>
+            <NavButton onClick={user ? () => signOut() : () => navigate("/login")}>
                 <p>Hello</p>
-                <p>Guest</p>
+                <p>{user ? user?.fullName : "Guest"}</p>
             </NavButton>
-            <NavButton>
+            <NavButton onClick={()=>navigate('/orders')}>
                 <p>Return</p>
                 <p>&Orders</p>
             </NavButton>
@@ -32,7 +41,7 @@ function Navbar() {
             </BasketButton>
            </RightContainer>
         </Inner>
-        <MobileSearchBar>
+        <MobileSearchBar onClick={()=>navigate('/addProduct')}>
             <input type="text" placeholder="Search..."/>
             <SearchIcon>
                 <img src='./images/searchIcon.png' alt=''/>
@@ -43,13 +52,13 @@ function Navbar() {
 }
 const Container = styled.div`
   width: 100%;
-  height: 60px;
+  height: 70px;
   background-color: #131921;
   display: flex;
   align-items: center;
   position: relative;
   @media only screen and (max-width: 767px) {
-    height: 120px;
+    height: 150px;
     flex-direction: column;
   }
 `;
@@ -69,16 +78,19 @@ const Logo = styled.div`
     width: 100px;
     margin-top: 10px;
   }
+  @media only screen and (max-width: 767px) {
+    width:50px;
+  }
 `;
 const SearchBar = styled.div`
-  height: 35px;
+  height:35px;
   flex: 1;
   margin: 0px 15px;
   display: flex;
   align-items: center;
   input {
     flex: 1;
-    width: 100%;
+    width: 50%;
     height: 100%;
     border: none;
     border-radius: 5px 0px 0px 5px;
@@ -114,7 +126,7 @@ const MobileSearchBar = styled.div`
 
 const SearchIcon = styled.div`
   background-color: #febd69;
-  height: 100%;
+  height: 37px;
   width: 40px;
   display: flex;
   align-items: center;
@@ -123,6 +135,7 @@ const SearchIcon = styled.div`
   img {
     width: 22px;
   }
+  cursor:pointer;
 `;
 const RightContainer = styled.div`
   display: flex;
@@ -130,13 +143,13 @@ const RightContainer = styled.div`
   width: fit-content;
   justify-content: space-around;
   height: 100%;
-  padding: 5px 15px;
+  padding: 5px 10px;
 `;
 
 const NavButton = styled.div`
   color: #fff;
-  padding: 5px;
   height: 80%;
+  padding:5px
   display: flex;
   flex-direction: column;
   justify-content: center;

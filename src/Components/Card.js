@@ -2,14 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import {Rating } from '@mui/material';
 import { useStateValue } from '../StateProvider';
-function Card({image,title,price,rating}) {
+function Card({id,image,title,price,rating}) {
   const [{basket},dispatch]=useStateValue();
-  const addtobasket=(e)=>{
+  const addtoBasket=(e)=>{
     console.log("basket>>",basket)
     e.preventDefault();
     dispatch({
       type: "ADD_TO_BASKET",
       item: {
+        id,
         title,
         price,
         image,
@@ -17,16 +18,17 @@ function Card({image,title,price,rating}) {
       },
     });
   };
+
   return (
     <Container>
         <Image>
             <img src={image} alt=''/>
         </Image>
         <Description>
-          <h5>{title}(4th Gen,2020 release)|smart speaker</h5>
+          <h5>{title}</h5>
           <Rating name="half-rating-read" defaultValue={rating} precision={0.5} readOnly />
           <p>₹ {price}</p>
-          <button onClick={addtobasket}>Add to Cart</button>
+          <button onClick={addtoBasket}>Add to Cart</button>
         </Description>
     </Container>
   )
@@ -38,6 +40,12 @@ display:flex;
 flex-direction:column;
 background-color:#ffff;
 z-index:10;
+cursor:pointer;
+&::hover{
+transition:0.3s ease-in-out;
+transform:translateY(20px);
+}
+
 `
 const Image=styled.div`
 width:100%;

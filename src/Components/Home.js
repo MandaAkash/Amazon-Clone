@@ -1,8 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Navbar from './Navbar'
 import Card from './Card'
+import axios from '../axios'
 function Home() {
+  const [products,setProducts]=useState("")
+  useEffect(() => {
+    const fetchdata = async () => {
+      const data = await axios.get("/products/get");
+      setProducts(data);
+    };
+    fetchdata();
+  }, []);
   return (
     <Container>
        <Navbar />
@@ -11,54 +20,16 @@ function Home() {
         <img src="./images/mobile_banner.jpg" alt="" />
        </Banner>
        <Main>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card Card image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
-        <Card  image={"https://m.media-amazon.com/images/I/61MbLLagiVL._AC_UY327_FMwebp_QL65_.jpg"}
-              price={500}
-              rating={3}
-              title={"Echo Dot"}/>
+       {products &&
+          products?.data.map((product) => (
+            <Card
+              id={product._id}
+              image={product.imageURL}
+              price={product.price}
+              rating={product.rating}
+              title={product.title}
+            />
+          ))}
        </Main>
     </Container>
   )
@@ -66,7 +37,6 @@ function Home() {
 const Container=styled.div`
 width:100%;
 background-color:rgb(234,237,237);
-max-width: 1400px;
   margin: auto;
   height: fit-content;
 `

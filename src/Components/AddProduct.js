@@ -1,67 +1,72 @@
+import axios from "../axios";
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import axios from "../axios";
-function SignUp() {
-  const navigate = useNavigate();
-
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const signup = (e) => {
+function AddProduct() {
+  const [title, setTitle] = useState("");
+  const [imageURL, setImageURL] = useState("");
+  const [price, setPrice] = useState(0);
+  const [rating, setRating] = useState(0);
+   const addProduct = (e) => {
     e.preventDefault();
-    axios
-      .post("/auth/signup", { email, password, fullName })
-      .then((res) => alert(res.data.message))
-      .catch((err) => console.warn(err));
 
-    navigate("/login");
+    axios
+      .post("/products/add", { title, imageURL, price, rating })
+      .then(() => {
+        setTitle("");
+        setImageURL("");
+        setPrice(0);
+        setRating(0);
+      })
+      .catch((error) => alert(error.message));
   };
   return (
     <Container>
-      <Logo onClick={() => navigate("/")}>
+      <Logo>
         <img src="./amazon_logo.png" alt="" />
       </Logo>
+
       <FormContainer>
-        <h3>Sign-Up</h3>
+        <h3>Add Product</h3>
+
         <InputContainer>
-          <p>FullName</p>
+          <p>Title</p>
           <input
             type="text"
-            placeholder="John Smith"
-            onChange={(e) => setFullName(e.target.value)}
-            value={fullName}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
           />
         </InputContainer>
         <InputContainer>
-          <p>Email</p>
+          <p>ImageURL</p>
           <input
-            type="email"
-            placeholder="example@example.com"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            type="text"
+            onChange={(e) => setImageURL(e.target.value)}
+            value={imageURL}
           />
         </InputContainer>
         <InputContainer>
-          <p>Password</p>
+          <p>Price</p>
           <input
-            type="password"
-            placeholder="********"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            type="number"
+            onChange={(e) => setPrice(e.target.value)}
+            value={price}
+          />
+        </InputContainer>
+        <InputContainer>
+          <p>Rating</p>
+          <input
+            type="number"
+            onChange={(e) => setRating(e.target.value)}
+            value={rating}
           />
         </InputContainer>
 
-        <SignUpButton onClick={signup}>Create Account in Amazon</SignUpButton>
+        <Button onClick={addProduct}>Add Product</Button>
       </FormContainer>
-
-      <LoginButton onClick={() => navigate("/login")}>
-        Back to Login
-      </LoginButton>
     </Container>
   );
 }
+
 const Container = styled.div`
   width: 40%;
   min-width: 450px;
@@ -84,19 +89,17 @@ const Logo = styled.div`
 const FormContainer = styled.form`
   border: 1px solid lightgray;
   width: 55%;
-  height: 400px;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 15px;
-
   h3 {
     font-size: 28px;
     font-weight: 400;
     line-height: 33px;
     align-self: flex-start;
-
     margin-bottom: 10px;
   }
 `;
@@ -104,12 +107,10 @@ const FormContainer = styled.form`
 const InputContainer = styled.div`
   width: 100%;
   padding: 10px;
-
   p {
     font-size: 14px;
     font-weight: 600;
   }
-
   input {
     width: 95%;
     height: 33px;
@@ -117,33 +118,21 @@ const InputContainer = styled.div`
     border-radius: 5px;
     border: 1px solid lightgray;
     margin-top: 5px;
-
     &:hover {
       border: 1px solid orange;
     }
   }
 `;
 
-const SignUpButton = styled.button`
-  width: 100%;
-  height: 35px;
-  font-size: 12px;
-  margin-top: 20px;
-
-  &:hover {
-    background-color: #dfdfdf;
-    border: 1px solid gray;
-  }
-`;
-
-const LoginButton = styled.button`
-  width: 55%;
+const Button = styled.button`
+  width: 70%;
   height: 35px;
   background-color: #f3b414;
   border: none;
   outline: none;
   border-radius: 10px;
   margin-top: 30px;
+  cursor:pointer;
 `;
 
-export default SignUp;
+export default AddProduct;
